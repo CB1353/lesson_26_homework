@@ -1,11 +1,15 @@
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, Date, Text, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, DeclarativeBase
 
 import hashlib
 
-from db.database import Base
+from db.database import engine
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 class User(Base):  # We extend the Base class
@@ -30,6 +34,9 @@ class User(Base):  # We extend the Base class
     @classmethod
     def hash_password_text(cls, password):
         return hashlib.sha224(password.encode()).hexdigest()
+
+    def get_user_posts(self):
+        return self.posts
 
 
 class Post(Base):
@@ -56,4 +63,4 @@ class Comment(Base):
     user = relationship("User", backref="comments")
 
 
-Base.metadata.create_all()
+Base.metadata.create_all(bind=engine)

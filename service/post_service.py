@@ -1,5 +1,5 @@
-from lessons.lesson_21.example_project.db.database import Session
-from lessons.lesson_21.example_project.models.models import Post, User, Comment
+from db.database import Session
+from models.models import Post, User, Comment
 
 
 def create_post(title, message, user):
@@ -14,7 +14,11 @@ def list_posts():
     return session.query(Post).all()
 
 
-def list_posts_for_user(user_id):
+def list_user_posts(user):
+    return user.posts
+
+
+def list_posts_by_user_id(user_id):
     session = Session()
     user = session.query(User).filter(User.id == user_id).one()
     return user.posts

@@ -1,13 +1,21 @@
+from service.post_service import PostService
+
+
 def list_other_posts(user):
     pass
 
 
 def list_my_posts(user):
-    pass
+    post_service = PostService()
+    for p in post_service.list_posts_by_user_id(user.id):
+        print(p)
 
 
 def add_post(user):
-    pass
+    title = input('title:')
+    message = input('message:')
+    post_service = PostService()
+    post_service.create_post(title, message, user)
 
 
 def add_comment(user):
