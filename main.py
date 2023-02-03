@@ -29,7 +29,7 @@ def menu(user):
     print('4: List my posts')
     print('5: List my comments')  # Comments I have created
     print('6: List post comments')  # Comments for a post by post_id
-    print('6: Delete post')  # Comments for a post by post_id
+    print('7: Delete post')  # Comments for a post by post_id
     while True:
         opt = input('Option: ')
         try:

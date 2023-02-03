@@ -52,6 +52,17 @@ class Post(Base):
         return f"Post(id={self.id}, created_by={self.created_by.user_name}, title={self.title}, message={self.message})"
 
 
+class Like(Base):
+    __tablename__ = 'likes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    post_id = Column(Integer, ForeignKey('post.id'))
+    post = relationship("Post", backref="likes")
+    liked_by_id = Column(Integer, ForeignKey('user.id'))
+    liked_by = relationship("User", backref='likes')
+
+
 class Comment(Base):
     __tablename__ = 'comment'
 
@@ -61,6 +72,12 @@ class Comment(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     post = relationship("Post", backref="comments")
     user = relationship("User", backref="comments")
+
+    def __repr__(self):
+        return f'Comment by user {self.user.user_name}: {self.message}'
+
+    def __str__(self):
+        return repr(self)
 
 
 Base.metadata.create_all(bind=engine)
