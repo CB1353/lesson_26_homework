@@ -1,7 +1,9 @@
+from uuid import uuid4
+
 from sqlalchemy.exc import NoResultFound, MultipleResultsFound, IntegrityError
 
 from db.database import Session
-from models.models import User
+from models.models import User, Token
 
 
 def create_user(username, firstname, last_name, password):
@@ -49,4 +51,19 @@ def login_user(username, password):
         ).one()
     except NoResultFound:
         raise Exception("Credentials dont match any user in the system")
-    return user  # Success
+    uuid_str = str(uuid4())
+    try:
+        existing_toekn = session.query(Token).filter(
+            Token.user_id == user.id
+        ).one()
+        return existing_toekn
+    except NoResultFound:
+        tkn = Token(
+            token=uuid_str,
+            user=user
+        )
+        session.add(
+            tkn
+        )
+        session.commit()
+        return tkn

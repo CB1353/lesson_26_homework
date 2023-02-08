@@ -80,4 +80,12 @@ class Comment(Base):
         return repr(self)
 
 
+class Token(Base):
+    __tablename__ = 'auth_token'
+
+    token = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    user = relationship("User", backref="tokens")
+
+
 Base.metadata.create_all(bind=engine)
