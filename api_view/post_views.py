@@ -35,23 +35,30 @@ def list_other_posts(user):
     return jsonify(r_data), 200
 
 
+
 @post_views.route('/posts/comments/<post_id>')
 @user_request
-def get_comments_for_post(user, post_id):
-    # Post id is part of the URL
-    # For example accessing localhost:8080/posts/comments/1/ will return comments for post_id 1
-    # TODO: Implement
+def get_comments_for_post(posts_comments, post_id):
+    if post_id not in posts_comments:
+        return "Post not found", 404
+    return jsonify(posts_comments[post_id])
     pass
+
 
 
 @post_views.route('/posts/comments/<post_id>/add/', methods=['POST'])
 @user_request
-def add_comment_on_post(user, post_id):
-    # Post id is part of the URL
-    # For example sending request to localhost:8080/posts/comments/1/add/
-    # will add the comment to post with id 1
-    # TODO: Implement
+def add_comment_on_post(posts_comments, post_id):
+    if post_id not in posts_comments:
+        return "Post not found", 404
+    comment_text = request.json.get("text")
+    if comment_text is None:
+        return "Comment text is required", 400
+    new_comment_id = max([c["comment_id"] for c in posts_comments[post_id]] + [0]) + 1
+    posts_comments[post_id].append({"comment_id": new_comment_id, "text": comment_text})
+    return jsonify({"comment_id": new_comment_id, "text": comment_text})
     pass
+
 
 
 @post_views.route('/posts/add')
